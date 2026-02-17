@@ -31,38 +31,29 @@ provider "kubernetes" {
 }
 
 
-module "network_151" {
+module "network" {
+  for_each              = { for net in var.networks : net.name => net }
   source                = "./modules/network"
-  ocp_namespace         = "default"
-  ocp_ovs_localnet_name = "br1-localnet"
-  tenant_name           = "OXXO"
-  vrf_name              = "OX_Prd_VRF"
-  application_profile   = "OX_Prd_AP"
-  network_name          = "net-151"
-  vlan_id               = 151
+  ocp_namespace         = var.ocp_namespace
+  ocp_ovs_localnet_name = var.ocp_ovs_localnet_name
+  tenant_name           = each.value.tenant_name
+  vrf_name              = each.value
+  application_profile   = each.value.application_profile
+  network_name          = each.value.name
+  vlan_id               = each.value.vlan_id
   physical_domain_name  = "OXXO_PhysDom"
-  network_subnet        = "10.184.151.0/24"
+  network_subnet        = each.value.network_subnet
 
 }
 
 module "vm_test_1" {
+  for_each             = { for vm in var.vms : vm.name => vm }
   source               = "./modules/virtual_machine"
-  ocp_namespace        = "default"
-  vm_name              = "vm-1"
-  memory               = 2
-  network_name         = "net-151"
-  network_subnet       =  module.network_151.network_range
-  network_gateway      =  module.network_151.network_gateway
-  container_disk_image = "quay.io/containerdisks/fedora:latest"
-}
-
-module "vm_test_2" {
-  source               = "./modules/virtual_machine"
-  ocp_namespace        = "default"
-  vm_name              = "vm-2"
-  memory               = 2
-  network_name         = "net-151"
-  network_subnet       =  module.network_151.network_range
-  network_gateway      =  module.network_151.network_gateway
-  container_disk_image = "quay.io/containerdisks/fedora:latest"
+  ocp_namespace        = var.ocp_namespace
+  vm_name              = each.value.name
+  memory               = each.value.memory
+  network_name         = each.value.network_name
+  network_subnet       = module.network[each.value.network_name].network_subnet
+  network_gateway      = module.network[each.value.network_name].network_gateway
+  container_disk_image = each.value.container_disk_image
 }
