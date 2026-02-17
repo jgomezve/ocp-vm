@@ -37,7 +37,7 @@ module "network" {
   ocp_namespace         = var.ocp_namespace
   ocp_ovs_localnet_name = var.ocp_ovs_localnet_name
   tenant_name           = each.value.tenant_name
-  vrf_name              = each.value
+  vrf_name              = each.value.vrf_name
   application_profile   = each.value.application_profile
   network_name          = each.value.name
   vlan_id               = each.value.vlan_id
@@ -53,7 +53,7 @@ module "vm_test_1" {
   vm_name              = each.value.name
   memory               = each.value.memory
   network_name         = each.value.network_name
-  network_subnet       = module.network[each.value.network_name].network_subnet
+  network_subnet       = module.network[each.value.network_name].network_range
   network_gateway      = module.network[each.value.network_name].network_gateway
   container_disk_image = each.value.container_disk_image
 }

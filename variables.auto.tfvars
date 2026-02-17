@@ -1,5 +1,5 @@
-ocp_namespace         = "ocp-virt-learning"
-ocp_ovs_localnet_name = "br0-localnet"
+ocp_namespace         = "default"
+ocp_ovs_localnet_name = "br1-localnet"
 
 networks = [
   {
