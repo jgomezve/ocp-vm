@@ -26,6 +26,11 @@ provider "menandmice" {
   tls_verify = false
 }
 
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
+
+
 module "network_151" {
   source                = "./modules/network"
   ocp_namespace         = "default"
@@ -33,7 +38,7 @@ module "network_151" {
   tenant_name           = "OXXO"
   vrf_name              = "OX_Prd_VRF"
   application_profile   = "OX_Prd_AP"
-  network_name          = "Net_151"
+  network_name          = "net-151"
   vlan_id               = 151
   physical_domain_name  = "OXXO_PhysDom"
   network_subnet        = "10.184.151.0/24"
@@ -45,7 +50,7 @@ module "vm_test_1" {
   ocp_namespace        = "default"
   vm_name              = "vm-1"
   memory               = 2
-  network_name         = "Net_151"
+  network_name         = "net-151"
   network_subnet       =  module.network_151.network_range
   network_gateway      =  module.network_151.network_gateway
   container_disk_image = "quay.io/containerdisks/fedora:latest"
@@ -56,7 +61,7 @@ module "vm_test_2" {
   ocp_namespace        = "default"
   vm_name              = "vm-2"
   memory               = 2
-  network_name         = "Net_151"
+  network_name         = "net-151"
   network_subnet       =  module.network_151.network_range
   network_gateway      =  module.network_151.network_gateway
   container_disk_image = "quay.io/containerdisks/fedora:latest"

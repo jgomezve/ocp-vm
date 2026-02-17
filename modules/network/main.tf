@@ -23,6 +23,7 @@ resource "aci_bridge_domain" "bd" {
 resource "aci_application_epg" "epg" {
   parent_dn = data.aci_application_profile.app_profile.id
   name      = "OpsVl${var.vlan_id}_EPG"
+  preferred_group_member = "include"
   relation_to_bridge_domain = {
     bridge_domain_name = aci_bridge_domain.bd.name
   }
@@ -39,7 +40,6 @@ resource "aci_epg_to_static_path" "example" {
   encap  = "vlan-${var.vlan_id}"
   mode  = "regular"
 }
-
 
 resource "menandmice_range" "ipam_range" {
   cidr   =  var.network_subnet
