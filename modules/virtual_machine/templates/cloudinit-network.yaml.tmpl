@@ -1,0 +1,9 @@
+version: 2
+ethernets:
+  enp2s0:
+    dhcp4: no
+    addresses:
+      - ${ip_address}
+    gateway4: ${gateway}
+    nameservers:
+      addresses: [${dns}]
