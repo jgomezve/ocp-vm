@@ -1,0 +1,29 @@
+image: hashicorp/terraform:latest
+
+stages:
+  - validate
+  - plan
+  # - apply
+
+before_script:
+  - terraform init
+validate:
+  stage: validate
+  script:
+    - terraform validate
+
+plan:
+  stage: plan
+  script:
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - tfplan
+
+# apply:
+#   stage: apply
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "main"'
+#   script:
+#     - terraform init
+#     - terraform apply -auto-approve tfplan
